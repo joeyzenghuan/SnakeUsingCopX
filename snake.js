@@ -48,9 +48,22 @@ function draw() {
     ctx.fillRect(segment.x, segment.y, blockSize, blockSize);
   });
 
-  // Draw the food
-  ctx.fillStyle = '#FF5722';
-  ctx.fillRect(food.x, food.y, blockSize, blockSize);
+  // // Draw the food
+  // ctx.fillStyle = '#FF5722';
+  // ctx.fillRect(food.x, food.y, blockSize, blockSize);
+
+  // Create an image element
+  const img = new Image();
+
+  img.src = 'face.jpg';
+
+  // img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="0" y="18" font-size="24">&#x1F60A;</text></svg>';
+
+  // Wait for the image to load
+  img.onload = function() {
+    // Draw the food
+    ctx.drawImage(img, food.x, food.y, blockSize, blockSize);
+  };
 
   drawObstacles();
 }
