@@ -9,10 +9,80 @@
         margin: auto;
         display: block;
       }
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+      }
+      .button-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .button {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        font-weight: bold;
+        margin: 10px;
+      }
+      #up {
+        order: -1;
+      }
+      #left {
+        order: 1;
+      }
+      #down {
+        order: 2;
+      }
+      #right {
+        order: 3;
+      }
     </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <div class="button-container">
+      <div class="button-row">
+        <button id="up" class="button">↑</button>
+      </div>
+      <div class="button-row">
+        <button id="left" class="button">←</button>
+        <button id="down" class="button">↓</button>
+        <button id="right" class="button">→</button>
+      </div>
+    </div>
     <script src="snake.js"></script>
+    <script>
+      // 获取按钮元素
+      const upButton = document.getElementById('up');
+      const downButton = document.getElementById('down');
+      const leftButton = document.getElementById('left');
+      const rightButton = document.getElementById('right');
+
+      // 监听按钮点击事件
+      upButton.addEventListener('click', () => {
+        if (direction !== 'down') {
+          direction = 'up';
+        }
+      });
+      downButton.addEventListener('click', () => {
+        if (direction !== 'up') {
+          direction = 'down';
+        }
+      });
+      leftButton.addEventListener('click', () => {
+        if (direction !== 'right') {
+          direction = 'left';
+        }
+      });
+      rightButton.addEventListener('click', () => {
+        if (direction !== 'left') {
+          direction = 'right';
+        }
+      });
+    </script>
   </body>
 </html>
