@@ -15,6 +15,22 @@ let food = {x: 0, y: 0};
 let score = 0;
 let direction = 'right';
 
+
+// Initialize obstacles array
+let obstacles = [];
+
+// Add obstacles to the array
+obstacles.push({x: 10, y: 30});
+obstacles.push({x: 100, y: 150});
+
+// Draw the obstacles on the canvas
+function drawObstacles() {
+    for (let i = 0; i < obstacles.length; i++) {
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(obstacles[i].x, obstacles[i].y, blockSize, blockSize);
+    }
+  }
+
 // Generate random food location
 function generateFood() {
   food.x = Math.floor(Math.random() * (canvasWidth / blockSize)) * blockSize;
@@ -35,6 +51,8 @@ function draw() {
   // Draw the food
   ctx.fillStyle = '#FF5722';
   ctx.fillRect(food.x, food.y, blockSize, blockSize);
+
+  drawObstacles();
 }
 
 // Move the snake
@@ -62,26 +80,33 @@ function move() {
   }
 }
 
-// Check for collisions with the walls and the snake's own body
+// Check for collisions with the walls, the snake's own body, and the obstacles
 function checkCollisions() {
-  // Wrap the snake's position around to the opposite side of the canvas if it goes out of bounds
-  if (snake[0].x < 0) {
-    snake[0].x = canvasWidth - blockSize;
-  } else if (snake[0].x >= canvasWidth) {
-    snake[0].x = 0;
-  } else if (snake[0].y < 0) {
-    snake[0].y = canvasHeight - blockSize;
-  } else if (snake[0].y >= canvasHeight) {
-    snake[0].y = 0;
-  }
-
-  // Check for collision with the snake's own body
-  for (let i = 1; i < snake.length; i++) {
-    if (snake[0].x === snake[i].x && snake[0].y === snake[i].y) {
-      gameOver();
+    // Wrap the snake's position around to the opposite side of the canvas if it goes out of bounds
+    if (snake[0].x < 0) {
+      snake[0].x = canvasWidth - blockSize;
+    } else if (snake[0].x >= canvasWidth) {
+      snake[0].x = 0;
+    } else if (snake[0].y < 0) {
+      snake[0].y = canvasHeight - blockSize;
+    } else if (snake[0].y >= canvasHeight) {
+      snake[0].y = 0;
+    }
+  
+    // Check for collision with the snake's own body
+    for (let i = 1; i < snake.length; i++) {
+      if (snake[0].x === snake[i].x && snake[0].y === snake[i].y) {
+        gameOver();
+      }
+    }
+  
+    // Check for collision with obstacles
+    for (let i = 0; i < obstacles.length; i++) {
+      if (snake[0].x === obstacles[i].x && snake[0].y === obstacles[i].y) {
+        gameOver();
+      }
     }
   }
-}
 
 // Check if the snake has eaten the food
 function checkFood() {
@@ -109,6 +134,48 @@ function gameOver() {
 
   // Generate new food
   generateFood();
+}
+
+// Initialize touch variables
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+// Add touch event listeners to the canvas element
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchmove', handleTouchMove);
+
+
+// Handle touch start event
+function handleTouchStart(event) {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+}
+
+// Handle touch move event
+function handleTouchMove(event) {
+  touchEndX = event.touches[0].clientX;
+  touchEndY = event.touches[0].clientY;
+
+  // Calculate touch direction based on start and end positions
+  const touchDirectionX = touchEndX - touchStartX;
+  const touchDirectionY = touchEndY - touchStartY;
+
+  // Set snake direction based on touch direction
+  if (Math.abs(touchDirectionX) > Math.abs(touchDirectionY)) {
+    if (touchDirectionX > 0) {
+      direction = 'right';
+    } else {
+      direction = 'left';
+    }
+  } else {
+    if (touchDirectionY > 0) {
+      direction = 'down';
+    } else {
+      direction = 'up';
+    }
+  }
 }
 
 // Handle keyboard input
